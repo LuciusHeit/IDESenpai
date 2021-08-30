@@ -1,0 +1,22 @@
+{
+    "name": "IDE",
+    "contents": [
+        {
+            "name": "Visual Studio Code",
+            "appID": "com.microsoft.VSCode"
+        },
+        {
+            "name": "XCode",
+            "appID": "com.apple.dt.Xcode"
+        }
+    ]
+},
+{
+    "name": "Game Dev",
+    "contents": [
+        {
+            "name": "Unity Hub",
+            "appID": "com.unity3d.unityhub"
+        }
+    ]
+}

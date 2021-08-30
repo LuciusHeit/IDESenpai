@@ -11,7 +11,7 @@ import SwiftUI
 struct IDESenpaiApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            AppListView(categories: categoryList)
         }
     }
 }
