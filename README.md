@@ -1,4 +1,4 @@
- ![Program logo](https://i.imgur.com/iCzZsms.png) IDESenpai
+ IDESenpai  ![Program logo](https://i.imgur.com/iCzZsms.png)
 ================
 IDESenpai is a utility for developers, consisting in a quick launcher for any of their programs used for programming, together with other minor utilities.
 
