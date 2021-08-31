@@ -24,3 +24,5 @@ Future ideas:
 - interface alternatives
   - widget
   - menu bar
+
+To try the current version, you can download it [Here](https://github.com/BadNarrators/IDESenpai/releases/tag/Alpha)
