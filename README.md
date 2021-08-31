@@ -1,6 +1,6 @@
  ![Program logo](https://i.imgur.com/Fwg2Ubu.png)  IDESenpai
 ================
-IDESenpai is a utility for developers, consisting in a quick launcher for any of their programs used for programming, together with other minor utilities.
+IDESenpai is a utility for Mac developers, consisting in a quick launcher for any of their programs used for programming, together with other minor utilities.
 
 ![Program example picture](https://i.imgur.com/FO8Ilbd.pngg)
 
