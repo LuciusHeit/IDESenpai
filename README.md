@@ -25,4 +25,4 @@ Future ideas:
   - widget
   - menu bar
 
-To try the current version, you can download it [Here](https://github.com/BadNarrators/IDESenpai/releases/tag/Alpha)
+To try the current version, you can download it [here](https://github.com/BadNarrators/IDESenpai/releases/tag/Alpha)
