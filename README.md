@@ -24,6 +24,9 @@ Future ideas:
 - interface alternatives
   - widget
   - menu bar
+- shortcuts constantly active to run programs while IDESenpai is in background
+  - custom shortcuts
+  - launch on boot, in background
 
 To try the current version, you can download it [here](https://github.com/BadNarrators/IDESenpai/releases/)
 
