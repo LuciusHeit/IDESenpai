@@ -14,6 +14,8 @@
 		47008ED426DC8B36003125F7 /* StartupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47008ED326DC8B36003125F7 /* StartupView.swift */; };
 		47008ED626DC8D8F003125F7 /* AppListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47008ED526DC8D8F003125F7 /* AppListView.swift */; };
 		47008ED826DCA1DB003125F7 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47008ED726DCA1DB003125F7 /* SearchBar.swift */; };
+		47F5D92126DEDC63004990AA /* GroupsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47F5D92026DEDC63004990AA /* GroupsController.swift */; };
+		47F5D92326DEDC75004990AA /* GroupsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47F5D92226DEDC75004990AA /* GroupsView.swift */; };
 		47FC77D426DD504600A8A452 /* appList.json in Resources */ = {isa = PBXBuildFile; fileRef = 47FC77D326DD504600A8A452 /* appList.json */; };
 		47FC77D626DD925A00A8A452 /* MenuBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47FC77D526DD925A00A8A452 /* MenuBarController.swift */; };
 /* End PBXBuildFile section */
@@ -29,6 +31,8 @@
 		47008ED326DC8B36003125F7 /* StartupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartupView.swift; sourceTree = "<group>"; };
 		47008ED526DC8D8F003125F7 /* AppListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppListView.swift; sourceTree = "<group>"; };
 		47008ED726DCA1DB003125F7 /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
+		47F5D92026DEDC63004990AA /* GroupsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupsController.swift; sourceTree = "<group>"; };
+		47F5D92226DEDC75004990AA /* GroupsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupsView.swift; sourceTree = "<group>"; };
 		47FC77D326DD504600A8A452 /* appList.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = appList.json; sourceTree = "<group>"; };
 		47FC77D526DD925A00A8A452 /* MenuBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -66,6 +70,8 @@
 				47008EC126DC8AD0003125F7 /* IDESenpaiApp.swift */,
 				47008ED326DC8B36003125F7 /* StartupView.swift */,
 				47008ED526DC8D8F003125F7 /* AppListView.swift */,
+				47F5D92226DEDC75004990AA /* GroupsView.swift */,
+				47F5D92026DEDC63004990AA /* GroupsController.swift */,
 				47FC77D526DD925A00A8A452 /* MenuBarController.swift */,
 				47008EC526DC8AD1003125F7 /* Assets.xcassets */,
 				47008ED126DC8B09003125F7 /* AppUtils.swift */,
@@ -160,7 +166,9 @@
 				47008ED426DC8B36003125F7 /* StartupView.swift in Sources */,
 				47008EC226DC8AD0003125F7 /* IDESenpaiApp.swift in Sources */,
 				47008ED626DC8D8F003125F7 /* AppListView.swift in Sources */,
+				47F5D92126DEDC63004990AA /* GroupsController.swift in Sources */,
 				47FC77D626DD925A00A8A452 /* MenuBarController.swift in Sources */,
+				47F5D92326DEDC75004990AA /* GroupsView.swift in Sources */,
 				47008ED826DCA1DB003125F7 /* SearchBar.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

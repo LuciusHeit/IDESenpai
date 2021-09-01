@@ -11,6 +11,8 @@ struct AppListView: View {
     var categories : [Category] = []
     var applications : [Application] = []
     @State var searchText = ""
+    @State var showGroupMenu = false
+    @State var selectedApplication: Application = Application(name: "XCode", appID: "com.apple.dt.Xcode")
     
     init(categories: [Category]) {
         //creation of category "All"
@@ -27,15 +29,33 @@ struct AppListView: View {
     }
     
     var body: some View {
-        VStack{
-            Searchbar(text: $searchText)
-            
-            NavigationView{
-                List(categories.filter { !$0.isEmpty() }) { category in
-                    CategoryCell(category: category, searchText: $searchText)
+        ZStack{
+            VStack{
+                Searchbar(text: $searchText)
+                
+                NavigationView{
+                    List(categories.filter { !$0.isEmpty() }) { category in
+                        CategoryCell(category: category, searchText: $searchText, showGroupMenu: $showGroupMenu, selectedApplication: $selectedApplication)
+                    }
+                }
+                .frame(maxHeight: 350)
+                .allowsHitTesting(!showGroupMenu)
+            }
+            if showGroupMenu {
+                Rectangle().opacity(0.2).onTapGesture {
+                    if showGroupMenu {
+                        withAnimation(.linear(duration: 0.3)) {
+                        showGroupMenu = false
+                    }
+                    }
                 }
             }
-            .frame(maxHeight: 350)
+        }
+        ZStack{
+            if showGroupMenu {
+                GroupsView(showGroupMenu: $showGroupMenu, selectedApplication: selectedApplication)
+            }
+                
         }
     }
 }
@@ -44,6 +64,8 @@ struct CategoryCell: View {
     var category : Category
     @Binding var searchText: String
     @State var active = true
+    @Binding var showGroupMenu: Bool
+    @Binding var selectedApplication: Application
     
     //old initialization, no longer useful
     /*init(category: Category, searchText: Binding<String>) {
@@ -64,14 +86,14 @@ struct CategoryCell: View {
     var body: some View {
         if category.name == "All" {
             NavigationLink(
-                destination: AppList(category: category.contents, searchText: $searchText), isActive: $active
+                destination: AppList(category: category.contents, searchText: $searchText, showGroupMenu: $showGroupMenu, selectedApplication: $selectedApplication), isActive: $active
             ){
                 Text(category.name)
             }.fixedSize()
         }
         else {
             NavigationLink(
-                destination: AppList(category: category.contents, searchText: $searchText)
+                destination: AppList(category: category.contents, searchText: $searchText, showGroupMenu: $showGroupMenu, selectedApplication: $selectedApplication)
             ){
                 Text(category.name)
             }.fixedSize()
@@ -82,6 +104,8 @@ struct CategoryCell: View {
 struct AppList: View {
     var category : [Application]
     @Binding var searchText: String
+    @Binding var showGroupMenu: Bool
+    @Binding var selectedApplication: Application
     
     var body: some View {
         List(category.filter({(searchText.isEmpty ? true : $0.name.lowercased().contains(searchText.lowercased())) && isAppInstalled($0.appID)}).sorted(by: {
@@ -100,7 +124,7 @@ struct AppList: View {
                     return $0.name.lowercased() < $1.name.lowercased()
                 }
             } )){ app in
-                AppListCell(application: app)
+            AppListCell(application: app, showGroupMenu: $showGroupMenu, selectedApplication: $selectedApplication)
         }
     }
 }
@@ -109,9 +133,13 @@ struct AppListCell: View {
     var application: Application
     @State var icon = "star"
     var initIcon: String
+    @Binding var showGroupMenu: Bool
+    @Binding var selectedApplication: Application
     
-    init(application: Application) {
+    init(application: Application, showGroupMenu: Binding<Bool>, selectedApplication: Binding<Application>) {
         self.application = application
+        self._showGroupMenu = showGroupMenu
+        self._selectedApplication = selectedApplication
         let favorites = UserDefaults.standard.object(forKey: "favorites") as? [String:String] ?? [:]
         let onLoadFavorite = favorites[application.appID] ?? "false"
         if onLoadFavorite == "true" {
@@ -143,6 +171,10 @@ struct AppListCell: View {
         }.contextMenu {
             Button(action: {
                 print("Existing group")
+                withAnimation(.linear(duration: 0.3)) {
+                    showGroupMenu = true
+                    selectedApplication = application
+                }
             }){
                 HStack{
                     Image(systemName: "folder.fill")

@@ -21,6 +21,10 @@ class Application : Identifiable{
         self.name = name
         self.appID = appID
     }
+    
+    func equals (app: Application) -> Bool{
+        return (app.name == self.name) && (app.appID == self.appID)
+    }
 }
 
 class Category : Identifiable{
@@ -122,7 +126,6 @@ var categoryList : [Category] = [
         Application(name: "Visual Studio Code", appID: "com.microsoft.VSCode"),
         Application(name: "Visual Studio", appID: "com.microsoft.visual-studio"),
         Application(name: "XCode", appID: "com.apple.dt.Xcode"),
-        Application(name: "XCodeTest", appID: "com.apple.dt.Xcodededede"),
         Application(name: "IDLE", appID: "org.python.IDLE")
     ]),
     Category(name: "VM & Containers", contents: [

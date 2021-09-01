@@ -13,5 +13,11 @@ struct IDESenpaiApp: App {
         WindowGroup {
             AppListView(categories: categoryList)
         }
+        //WIP, command menu
+        /*.commands {
+            CommandMenu("First menu") {
+            }
+        }
+        */
     }
 }
