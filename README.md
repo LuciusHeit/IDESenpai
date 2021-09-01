@@ -24,5 +24,13 @@ Future ideas:
 - interface alternatives
   - widget
   - menu bar
+- shortcuts constantly active to run programs while IDESenpai is in background
+  - custom shortcuts
+  - launch on boot, in background
 
 To try the current version, you can download it [here](https://github.com/BadNarrators/IDESenpai/releases/)
+
+[![Discord](https://img.shields.io/discord/800209731582033920?color=blue&label=discord)](https://discord.gg/3KRnrDjXkw)
+[![Current Version](https://img.shields.io/github/v/release/BadNarrators/IDESenpai?include_prereleases)](https://github.com/BadNarrators/IDESenpai/releases)
+[![Downloads](https://img.shields.io/github/downloads-pre/BadNarrators/IDESenpai/latest/total?color=purple&label=downloads)](https://github.com/BadNarrators/IDESenpai/releases/latest)
+[![Commits since Latest](https://img.shields.io/github/commits-since/BadNarrators/IDESenpai/latest?include_prereleases)](https://github.com/BadNarrators/IDESenpai/commits/main)
