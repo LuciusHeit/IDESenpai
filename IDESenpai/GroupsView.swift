@@ -9,7 +9,21 @@ import SwiftUI
 
 struct GroupsView: View {
     @Binding var showGroupMenu: Bool
+    @State var appGroups: [Group]
     var selectedApplication: Application
+    
+    init(showGroupMenu: Binding<Bool>, selectedApplication: Application) {
+        self._showGroupMenu = showGroupMenu
+        self.selectedApplication = selectedApplication
+        
+        self.appGroups = loadGroups()
+    }
+    init(showGroupMenu: Binding<Bool>, selectedApplication: Application, appGroups: [Group]) {
+        self._showGroupMenu = showGroupMenu
+        self.selectedApplication = selectedApplication
+        
+        self.appGroups = appGroups
+    }
     
     var body: some View {
         ZStack{
@@ -18,8 +32,9 @@ struct GroupsView: View {
             VStack(alignment: .center, spacing: 0) {
 
                 ScrollView{
-                    ForEach(testGroups){ group in
-                        GroupCell(group: group, selectedApplication: selectedApplication)
+                    NewGroupCell(appGroups: $appGroups)
+                    ForEach(self.appGroups){ group in
+                        GroupCell(group: group, selectedApplication: selectedApplication, appGroups: $appGroups)
                     }
                 }
                 .padding(.vertical)
@@ -31,6 +46,9 @@ struct GroupsView: View {
                         withAnimation(.linear(duration: 0.3)) {
                             showGroupMenu = false
                         }
+                        
+                        //Save the modified groups
+                        saveGroups(groups: appGroups)
                     }, label: {
                         Text("Confirm")
                             .frame(maxWidth: .infinity)
@@ -52,37 +70,128 @@ struct GroupsView: View {
 struct GroupCell: View {
     var group : Group
     var selectedApplication: Application
-    var addInGroupIcon: String
+    @State private var addInGroupIcon: String
+    @State private var isAppInGroup: Bool
+    @Binding var appGroups: [Group]
     
-    init(group: Group, selectedApplication: Application){
+    init(group: Group, selectedApplication: Application, appGroups: Binding<[Group]>){
         self.group = group
         self.selectedApplication = selectedApplication
-        for app in self.group.contents {
-            if app.equals(app: self.selectedApplication){
-                addInGroupIcon = "plus.app.fill"
-                return
-            }
+        self._appGroups = appGroups
+        if self.group.contents.contains(selectedApplication) {
+            self.addInGroupIcon = "folder.fill"
+            self.isAppInGroup = true
+        }else {
+            addInGroupIcon = "folder"
+            self.isAppInGroup = false
         }
-        addInGroupIcon = "plus.app"
-        
     }
     
     var body: some View {
         ZStack{
             Color.accentColor.opacity(0.12).padding(.trailing, 15)
-            HStack{
-                Text(group.name)
-                Spacer()
-                Button(action: {
-                    print("test")
-                }){
+            Button(action: {
+                if isAppInGroup {
+                    print("Removing app "+selectedApplication.name+" to group "+group.name)
+                    group.removeApp(application: selectedApplication)
+                    self.addInGroupIcon = "folder"
+                    self.isAppInGroup = false
+                }else {
+                    print("Adding app "+selectedApplication.name+" to group "+group.name)
+                    group.addApp(application: selectedApplication)
+                    self.addInGroupIcon = "folder.fill"
+                    self.isAppInGroup = true
+                }
+            }){
+                HStack{
+                    Text(group.name)
+                    ZStack {
+                        Color.black.opacity(0.001)
+                        Spacer()
+                    }
                     Image(systemName: addInGroupIcon)
                         .padding(.trailing)
                         .font(.title)
-                }.buttonStyle(PlainButtonStyle())
+                }
+                .padding([.leading, .vertical], 3.0)
+                .padding(.trailing, 6)
+                
+            }.buttonStyle(PlainButtonStyle())
+        }.contextMenu {
+            Button(action: {
+                print("Removing group")
+                appGroups = removeGroup(remove: group, groups: appGroups)
+            }){
+                HStack{
+                    Image(systemName: "trash.fill")
+                    Text("Delete group...")
+                }
             }
-            .padding([.leading, .vertical], 3.0)
-            .padding(.trailing, 6)
+        }
+    }
+}
+
+struct NewGroupCell: View {
+    @State var groupName = ""
+    @State var newIcon = "folder.badge.plus"
+    @State var showTextField = false
+    @State var iconPaddingRight: CGFloat? = 16
+    @Binding var appGroups: [Group]
+    
+    var body: some View {
+        ZStack{
+            Color.accentColor.opacity(0.12).padding(.trailing, 15)
+            
+            Button(action: {
+                toggleTextField()
+            }){
+                HStack{
+                    Text("New group").bold()
+                    if !showTextField {
+                        ZStack {
+                            Color.black.opacity(0.001)
+                            Spacer()
+                        }
+                    }
+                    Button(action: {
+                       toggleTextField()
+                    }){
+                        Image(systemName: newIcon)
+                            .padding(.leading)
+                            .padding(.trailing, iconPaddingRight)
+                            .font(.title)
+                    }.buttonStyle(PlainButtonStyle())
+                    if showTextField {
+                        TextField("Insert group name...", text: $groupName, onCommit: {
+                            groupName = groupName.trimmingCharacters(in: .whitespacesAndNewlines)
+                            if groupName != "" {
+                                print("Creating group "+groupName)
+                                appGroups = addGroup(name: groupName, groups: appGroups)
+                                toggleTextField()
+                            }
+                        })
+                        .padding(.trailing, 20)
+                    }
+                }
+                .padding([.leading, .vertical], 6.0)
+                .padding(.trailing, 6)
+                
+            }.buttonStyle(PlainButtonStyle())
+        }
+        .padding(.bottom, 5.0)
+    }
+    
+    func toggleTextField(){
+        withAnimation(.linear(duration: 0.4)) {
+            showTextField = !showTextField
+            
+            if showTextField {
+                newIcon = "chevron.forward"
+                iconPaddingRight = 0
+            }else {
+                newIcon = "folder.badge.plus"
+                iconPaddingRight = 16
+            }
         }
     }
 }
@@ -90,6 +199,7 @@ struct GroupCell: View {
 struct GroupsView_Previews: PreviewProvider {
     
     static var previews: some View {
+        /*GroupsView(showGroupMenu: .constant(true), selectedApplication: Application(name: "Visual Studio Code", appID: "com.microsoft.VSCode"), appGroups: testGroups)*/
         GroupsView(showGroupMenu: .constant(true), selectedApplication: Application(name: "Visual Studio Code", appID: "com.microsoft.VSCode"))
     }
 }

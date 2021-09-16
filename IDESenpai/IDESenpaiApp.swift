@@ -11,7 +11,9 @@ import SwiftUI
 struct IDESenpaiApp: App {
     var body: some Scene {
         WindowGroup {
-            AppListView(categories: categoryList)
+            AppListView(categories: categoryList).onDisappear(){
+                exit(0)
+            }
         }
         //WIP, command menu
         /*.commands {

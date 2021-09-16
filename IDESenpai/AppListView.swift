@@ -13,6 +13,7 @@ struct AppListView: View {
     @State var searchText = ""
     @State var showGroupMenu = false
     @State var selectedApplication: Application = Application(name: "XCode", appID: "com.apple.dt.Xcode")
+    @State private var isFirstTimeGroupMenu = true
     
     init(categories: [Category]) {
         //creation of category "All"
@@ -42,11 +43,18 @@ struct AppListView: View {
                 .allowsHitTesting(!showGroupMenu)
             }
             if showGroupMenu {
-                Rectangle().opacity(0.2).onTapGesture {
+                ZStack{
+                    Rectangle().opacity(0.2)
+                    if isFirstTimeGroupMenu {
+                        Text("Click anywhere to cancel")
+                            .font(.title)
+                    }
+                }.onTapGesture {
                     if showGroupMenu {
                         withAnimation(.linear(duration: 0.3)) {
                         showGroupMenu = false
-                    }
+                        }
+                        isFirstTimeGroupMenu = false
                     }
                 }
             }
@@ -170,7 +178,7 @@ struct AppListCell: View {
             openApp(application.appID)
         }.contextMenu {
             Button(action: {
-                print("Existing group")
+                print("Showing add-to-group menu")
                 withAnimation(.linear(duration: 0.3)) {
                     showGroupMenu = true
                     selectedApplication = application
@@ -178,18 +186,18 @@ struct AppListCell: View {
             }){
                 HStack{
                     Image(systemName: "folder.fill")
-                    Text("Add to existing group...")
+                    Text("Add to group...")
                 }
             }
             
-            Button(action: {
+            /*Button(action: {
                 print("New group")
             }){
                 HStack{
                     Image(systemName: "plus.rectangle.fill.on.folder.fill")
                     Text("Add to new group")
                 }
-            }
+            }*/
         }
     }
     

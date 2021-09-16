@@ -12,7 +12,11 @@ class GlobalData: ObservableObject {
     @Published var favorites: [String: String] = [:]
 }
 
-class Application : Identifiable{
+class Application : Identifiable, Equatable, Encodable, Decodable{
+    static func == (lhs: Application, rhs: Application) -> Bool {
+        return lhs.appID == rhs.appID && lhs.name == rhs.name
+    }
+    
     var id = UUID()
     var name : String
     var appID : String
