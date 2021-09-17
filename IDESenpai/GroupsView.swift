@@ -117,7 +117,8 @@ struct GroupCell: View {
                 .padding(.trailing, 6)
                 
             }.buttonStyle(PlainButtonStyle())
-        }.contextMenu {
+        }.help("Add/remove from group")
+        .contextMenu {
             Button(action: {
                 print("Removing group")
                 appGroups = removeGroup(remove: group, groups: appGroups)

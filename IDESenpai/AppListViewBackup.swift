@@ -7,17 +7,15 @@
 
 import SwiftUI
 
-struct AppListView: View {
+/*struct AppListView: View {
     var categories : [Category] = []
     var applications : [Application] = []
-    @State var customCategories : [Category] = []
+    var customCategories : [Category] = []
     @State var searchText = ""
     @State var showGroupMenu = false
     @State var selectedApplication: Application = Application(name: "XCode", appID: "com.apple.dt.Xcode")
     @State private var isFirstTimeGroupMenu = true
     @State private var showGroups = false
-    @State private var groupIcon = "text.book.closed"
-    @State var firstCustomCategory: String
     
     init(categories: [Category]) {
         //creation of category "All"
@@ -29,8 +27,10 @@ struct AppListView: View {
         }
         self.categories.insert(Category(name: "All", contents: applications), at: 0)
         
-        self.customCategories = []
-        self.firstCustomCategory = ""
+        let groups = loadGroups()
+        for group in groups {
+            self.customCategories.append(group.toCategory())
+        }
         
         //initialization of user favorites
         /*GlobalData().$favorites = UserDefaults.standard.object(forKey: "favorites") as? [String:String]*/
@@ -39,41 +39,58 @@ struct AppListView: View {
     var body: some View {
         ZStack{
             VStack{
-                HStack{
-                    Button(action: {
-                        withAnimation(.linear(duration: 0.5)){
-                            showGroups = !showGroups
-                            if showGroups {
-                                groupIcon = "text.book.closed.fill"
-                                loadCustomCategories()
-                            }else {
-                                groupIcon = "text.book.closed"
-                            }
-                        }
-                    }, label: {
-                        Image(systemName: groupIcon)
-                            .font(.title2)
-                            .padding(.leading, 20)
-                            .padding(.top, -1)
-                    }).buttonStyle(PlainButtonStyle())
-                    .help("Show/Hide Groups")
-                    
-                    Searchbar(text: $searchText)
-                }
+                Searchbar(text: $searchText)
                 
                 NavigationView{
-                    if !showGroups {
+                    VStack{
                         List(categories.filter { !$0.isEmpty() }) { category in
-                            CategoryCell(category: category, searchText: $searchText, showGroupMenu: $showGroupMenu, selectedApplication: $selectedApplication, firstCustomCategory: "")
+                            CategoryCell(category: category, searchText: $searchText, showGroupMenu: $showGroupMenu, selectedApplication: $selectedApplication)
                         }
-                        .padding(.top)
-                        Spacer()
-                    }else {
-                        List(customCategories.filter { !$0.isEmpty() }) { category in
-                            CategoryCell(category: category, searchText: $searchText, showGroupMenu: $showGroupMenu, selectedApplication: $selectedApplication, firstCustomCategory: firstCustomCategory)
+                        Divider()
+                        if !showGroups {
+                            VStack{
+                                Button(action: {
+                                    withAnimation(.linear(duration: 0.3)){
+                                        showGroups = true
+                                    }
+                                }, label: {
+                                    ZStack{
+                                        Color(.purple).opacity(0.001)
+                                            .frame(width: 135, height: 40.0)
+                                        Text("(Close Groups)")
+                                            .font(.subheadline)
+                                            .padding(.bottom)
+                                            .padding(.top, -20)
+                                            .padding([.leading, .trailing], 25)
+                                            .foregroundColor(Color(NSColor.white).opacity(0.34))
+                                    }
+                                    
+                                })
+                                .buttonStyle(PlainButtonStyle())
+                                List(customCategories.filter { !$0.isEmpty() }) { category in
+                                    CategoryCell(category: category, searchText: $searchText, showGroupMenu: $showGroupMenu, selectedApplication: $selectedApplication)
+                                }
+                                Spacer()
+                            }
+                        }else {
+                            Button(action: {
+                                withAnimation(.linear(duration: 0.3)){
+                                    showGroups = true
+                                }
+                            }, label: {
+                                ZStack{
+                                    Color(.purple).opacity(0.001)
+                                        .frame(width: 135, height: 40.0)
+                                    Text("Your Groups")
+                                        .padding(.bottom)
+                                        .padding(.top, 6)
+                                        .padding([.leading, .trailing], 25)
+                                }
+                                
+                            })
+                            .buttonStyle(PlainButtonStyle())
+                            
                         }
-                        .padding(.top)
-                        Spacer()
                     }
                 }
                 .frame(maxHeight: 350)
@@ -103,18 +120,6 @@ struct AppListView: View {
                 
         }
     }
-    
-    func loadCustomCategories() {
-        self.customCategories = []
-        
-        let groups = loadGroups()
-        
-        for group in groups {
-            self.customCategories.append(group.toCategory())
-        }
-        
-        self.firstCustomCategory = self.customCategories[0].name
-    }
 }
 
 struct CategoryCell: View {
@@ -123,7 +128,6 @@ struct CategoryCell: View {
     @State var active = true
     @Binding var showGroupMenu: Bool
     @Binding var selectedApplication: Application
-    var firstCustomCategory: String
     
     //old initialization, no longer useful
     /*init(category: Category, searchText: Binding<String>) {
@@ -149,25 +153,7 @@ struct CategoryCell: View {
                 Text(category.name)
             }.fixedSize()
         }
-        else if category.name == firstCustomCategory && category.name != "" {
-            HStack{
-                NavigationLink(
-                    destination: AppList(category: category.contents, searchText: $searchText, showGroupMenu: $showGroupMenu, selectedApplication: $selectedApplication), isActive: $active
-                ){
-                    Text(category.name)
-                }.fixedSize()
-                Spacer()
-                Button(action: {
-                    category.openAllApplications()
-                }, label: {
-                    Image(systemName: "link.circle")
-                        .font(.title2)
-                        .padding(.leading, 20)
-                        .padding(.top, -1)
-                }).buttonStyle(PlainButtonStyle())
-                .help("Open all programs in group")
-            }
-        }else {
+        else {
             NavigationLink(
                 destination: AppList(category: category.contents, searchText: $searchText, showGroupMenu: $showGroupMenu, selectedApplication: $selectedApplication)
             ){
@@ -240,7 +226,6 @@ struct AppListCell: View {
                         //State variable wouldn't change on init, so this forces to update when the button appears
                         .onAppear{self.icon = self.initIcon}
                 }.buttonStyle(PlainButtonStyle())
-                .help("Add/remove from favorites")
             }
             .padding(.leading)
         }.onTapGesture {
@@ -255,7 +240,7 @@ struct AppListCell: View {
             }){
                 HStack{
                     Image(systemName: "folder.fill")
-                    Text("Edit in groups...")
+                    Text("Add to group...")
                 }
             }
             
@@ -289,3 +274,4 @@ struct AppListView_Previews: PreviewProvider {
         AppListView(categories: categoryList)
     }
 }
+*/

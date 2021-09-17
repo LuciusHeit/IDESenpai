@@ -33,6 +33,9 @@ class Group : Identifiable, Equatable, Encodable, Decodable {
             self.contents.remove(at: index)
         }
     }
+    func toCategory() -> Category {
+        return Category(name: self.name, contents: self.contents)
+    }
 }
 
 func saveGroups(groups: [Group]) -> Void{

@@ -8,9 +8,6 @@
 import Foundation
 import Cocoa
 
-class GlobalData: ObservableObject {
-    @Published var favorites: [String: String] = [:]
-}
 
 class Application : Identifiable, Equatable, Encodable, Decodable{
     static func == (lhs: Application, rhs: Application) -> Bool {
@@ -28,6 +25,10 @@ class Application : Identifiable, Equatable, Encodable, Decodable{
     
     func equals (app: Application) -> Bool{
         return (app.name == self.name) && (app.appID == self.appID)
+    }
+    
+    func open () {
+        openApp(self.appID)
     }
 }
 
@@ -54,6 +55,12 @@ class Category : Identifiable{
         }
         else {
             return false
+        }
+    }
+    
+    func openAllApplications () {
+        for app in self.contents {
+            app.open()
         }
     }
 }
